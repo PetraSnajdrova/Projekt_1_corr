@@ -41,8 +41,8 @@ uzivatele = {"bob": "123", "ann": "pass123", "mike": "password123", "liz": "pass
 uzivatel = input("Username: ")
 heslo = input("Password: ")
 
-if (uzivatel in list(uzivatele)):
-    if heslo in uzivatele[uzivatel]:
+if uzivatel in uzivatele:
+    if heslo == uzivatele[uzivatel]:
         print(oddelovac)
         print(f"Welcome to the app, {uzivatel}", sep="\n")
         print("We have 3 texts to be analyzed", sep="\n")
@@ -55,43 +55,37 @@ else:
     quit()
 
 cislo_textu = input("Enter a number btw. 1, 2 or 3 to select: ")
+rozdelena_slova = TEXTS[int(cislo_textu) - 1].split()
 
 if cislo_textu.isdigit():
     cislo_textu = int(cislo_textu)
     if 1 <= cislo_textu <= 3:
-        text = TEXTS[cislo_textu - 1]
-        words = TEXTS[int(cislo_textu) - 1].split()
-        pocet_slov = len(words)
+        words = rozdelena_slova
         titlecase_words = []
-        for slovo in TEXTS[int(cislo_textu) - 1].split():
+        uppercase_words = []
+        lowercase_words = []
+        numeric_strings = []
+        soucet = []
+        vycistena_slova = []
+        for slovo in rozdelena_slova:
+            ciste_slovo = slovo.strip('.,?!-')
+            vycistena_slova.append(ciste_slovo.lower())
             if slovo.istitle():
                 titlecase_words.append(slovo)
-        uppercase_words = []
-        for slovo in TEXTS[int(cislo_textu) - 1].split():
-            if slovo.isalpha() and slovo.isupper():
+            elif slovo.isalpha() and slovo.isupper():
                 uppercase_words.append(slovo)
-        lowercase_words = []
-        for slovo in TEXTS[int(cislo_textu) - 1].split():
-            if slovo.islower():
+            elif slovo.islower():
                 lowercase_words.append(slovo)
-        numeric_strings = []
-        for slovo in TEXTS[int(cislo_textu) - 1].split():
-            if slovo.isnumeric():
+            elif slovo.isnumeric():
                 numeric_strings.append(slovo)
-        soucet = []
-        for slovo in TEXTS[int(cislo_textu) - 1].split():
-            if slovo.isnumeric():
                 soucet.append(int(slovo))
-        suma = sum(soucet)
         print(oddelovac)
         print(f"There are {len(words)} words in the selected text.")
         print(f"There are {len(titlecase_words)} titlecase words.")
         print(f"There are {len(uppercase_words)} uppercase words.")
         print(f"There are {len(lowercase_words)} lowercase words.")
         print(f"There are {len(numeric_strings)} numeric strings.")
-        print(f"The sum of all the numbers {suma}")
-        print(oddelovac)
-        print(f"{"LEN":<}|{"OCCURENCES":^20}|{"NR.":<}")
+        print(f"The sum of all the numbers {sum(soucet)}")
         print(oddelovac)
     else:
         print("Cislo textu neexistuje!")
@@ -100,13 +94,9 @@ else:
     print("Zadej cislo, ne text!")
     quit()
 
-vycistena_slova = []
-
-for slovo in TEXTS[cislo_textu - 1].split():
-    ciste_slovo = slovo.strip('.,?!-')
-    vycistena_slova.append(ciste_slovo.lower())
-
-delky_slov = [len(slovo) for slovo in vycistena_slova]  
+delky_slov = [len(slovo) for slovo in vycistena_slova]
+print(f"{"LEN":<}|{"OCCURENCES":^20}|{"NR.":<}")
+print(oddelovac)
 
 for delka in range(1,max(delky_slov)+1):
     print(f"{delka:>3}|{"*"*delky_slov.count(delka):<20}|{delky_slov.count(delka):>}")
