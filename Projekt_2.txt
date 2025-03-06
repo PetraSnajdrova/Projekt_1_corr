@@ -1,0 +1,170 @@
+1. Funkce greet_user()
+python
+Zkopírovat
+Upravit
+def greet_user():
+    print("Vítejte ve hře Bulls and Cows!")
+    print("Hádejte 4místné číslo s unikátními číslicemi, které nezačíná nulou.")
+    print("Bull = správná číslice na správném místě, Cow = správná číslice na špatném místě.")
+Co dělá:
+
+Tato funkce jednoduše vypíše uvítací text a pravidla hry.
+print() slouží k zobrazení textu na obrazovce.
+Funkce nemá žádné vstupy ani výstupy, jen slouží k tomu, aby hra začala přátelsky.
+2. Funkce generate_secret_number()
+
+def generate_secret_number():
+    digits = list('123456789')
+    first_digit = random.choice(digits)
+    digits.remove(first_digit)
+    remaining_digits = random.sample(digits + ['0'], 3)
+    return first_digit + ''.join(remaining_digits)
+Co dělá:
+
+Tahle funkce vytvoří tajné 4místné číslo s unikátními číslicemi, které nezačíná nulou.
+list('123456789') vytvoří seznam znaků od 1 do 9, takže žádné nuly na začátku.
+random.choice(digits) vybere náhodnou číslici z tohoto seznamu a uloží ji do proměnné first_digit.
+digits.remove(first_digit) odstraní tuto číslici ze seznamu, aby se nemohla opakovat.
+random.sample(digits + ['0'], 3) vybere 3 různé číslice z upraveného seznamu, kde už je povolená nula.
+Nakonec se všechny číslice spojí pomocí ''.join() do jednoho řetězce a funkce ho vrátí.
+3. Funkce validate_guess(guess)
+
+def validate_guess(guess):
+    if not guess.isdigit():
+        return "Vstup musí obsahovat pouze číslice."
+    if len(guess) != 4:
+        return "Číslo musí mít přesně 4 číslice."
+    if guess[0] == '0':
+        return "Číslo nesmí začínat nulou."
+    if len(set(guess)) != 4:
+        return "Číslice se nesmí opakovat."
+    return None
+Co dělá:
+
+Tato funkce zkontroluje, jestli je vstup hráče platný.
+guess.isdigit() ověřuje, jestli vstup obsahuje jen číslice.
+len(guess) != 4 ověřuje, že má vstup přesně 4 číslice.
+guess[0] == '0' zajišťuje, že číslo nezačíná nulou.
+len(set(guess)) != 4 kontroluje, že se žádná číslice neopakuje (množina set() totiž obsahuje pouze unikátní prvky).
+Pokud je vše v pořádku, vrací None, což znamená, že žádná chyba nenastala. Pokud je něco špatně, vrátí chybovou zprávu.
+4. Funkce evaluate_guess(secret, guess)
+
+def evaluate_guess(secret, guess):
+    bulls = sum(s == g for s, g in zip(secret, guess))
+    cows = sum(g in secret for g in guess) - bulls
+    return bulls, cows
+Co dělá:
+
+Tato funkce spočítá počet bulls a cows mezi tajným číslem a tipem hráče.
+zip(secret, guess) spojí tajné číslo a tip do dvojic číslic (např. ('1', '2'), ('4', '4'), ...).
+sum(s == g for s, g in zip(secret, guess)) spočítá, kolikrát se číslice a jejich pozice shodují → bulls.
+sum(g in secret for g in guess) spočítá, kolikrát se tipovaná číslice nachází v tajném čísle (bez ohledu na pozici). Z toho se pak odečte počet bulls, protože ty už byly spočítány.
+Funkce vrátí dvojici (bulls, cows).
+5. Funkce format_feedback(bulls, cows)
+
+def format_feedback(bulls, cows):
+    bull_word = "bull" if bulls == 1 else "bulls"
+    cow_word = "cow" if cows == 1 else "cows"
+    return f"{bulls} {bull_word}, {cows} {cow_word}"
+Co dělá:
+
+Tahle funkce připraví text pro zobrazení výsledků hádání.
+Pomocí podmíněného výrazu (if ... else) zvolí jednotné nebo množné číslo:
+Pokud je bulls == 1, použije „bull“, jinak „bulls“.
+Stejně to funguje pro „cow“ a „cows“.
+Vrátí řetězec ve formátu „X bulls, Y cows“.
+6. Funkce main()
+
+def main():
+    greet_user()
+    secret_number = generate_secret_number()
+    attempts = 0
+
+    while True:
+        guess = input("Zadejte svůj tip: ").strip()
+        validation_error = validate_guess(guess)
+
+        if validation_error:
+            print(validation_error)
+            continue
+
+        attempts += 1
+        bulls, cows = evaluate_guess(secret_number, guess)
+        print(format_feedback(bulls, cows))
+
+        if bulls == 4:
+            print(f"Gratuluji! Uhodli jste číslo {secret_number} za {attempts} pokusů.")
+            break
+Co dělá:
+
+Tohle je hlavní část programu, která spojuje všechny funkce dohromady.
+Nejprve zavolá greet_user() a vytvoří tajné číslo pomocí generate_secret_number().
+Změnná attempts počítá počet pokusů.
+V nekonečné smyčce while True se opakuje hádání:
+Pomocí input() se načte vstup hráče, .strip() odstraní mezery.
+Funkce validate_guess() ověří vstup. Pokud je neplatný, zobrazí chybu a cyklus pokračuje od začátku díky continue.
+Po platném vstupu se počet pokusů zvýší o 1.
+Funkce evaluate_guess() spočítá bulls a cows a výsledek se zobrazí pomocí format_feedback().
+Pokud hráč uhodne všechny 4 číslice, program vypíše gratulaci a ukončí cyklus příkazem break.
+7. Hlavní blok spuštění programu
+
+if __name__ == "__main__":
+    main()
+Co dělá:
+
+Tato konstrukce zajistí, že se funkce main() spustí pouze tehdy, pokud je tento skript spuštěn přímo.
+Pokud by byl importován do jiného programu, hlavní funkce by se nespustila.
+Tohle by mělo pokrýt celý program. Pokud potřebuješ detailněji vysvětlit jakoukoli část, dej vědět! 😊
+
+
+
+
+
+
+Řekl/a jsi:
+mohl by si prosím funkci 4 zapsat pomocí funkce enumerate?
+ChatGPT řekl:
+Jasně! Funkci evaluate_guess() přepíšeme tak, aby místo zip() použila enumerate().
+
+📌 Co je enumerate()?
+
+enumerate() přidává index k jednotlivým prvkům seznamu nebo řetězce.
+Příklad:
+
+for index, value in enumerate('1234'):
+    print(index, value)
+# Výstup:
+# 0 1
+# 1 2
+# 2 3
+# 3 4
+Teď přepíšeme původní funkci:
+
+✅ Nová verze s enumerate():
+python
+Zkopírovat
+Upravit
+def evaluate_guess(secret, guess):
+    bulls = sum(secret[i] == digit for i, digit in enumerate(guess))
+    cows = sum(digit in secret for digit in guess) - bulls
+    return bulls, cows
+Co se změnilo:
+
+Místo zip(secret, guess) teď používáme enumerate(guess), což nám vrátí index i a číslici digit.
+Pomocí secret[i] == digit kontrolujeme, jestli se číslice shoduje i na stejném místě → bulls.
+Počet cows počítáme stejně jako předtím: kolik číslic z tipu je obsaženo v tajném čísle mínus počet bulls, protože už byly započítány.
+📋 Shrnutí výhod:
+✅ Kód je čitelnější pro začátečníky.
+✅ enumerate() je elegantní a často se používá v Pythonu.
+
+Pokud bys chtěl ještě další úpravy, dej vědět! 😊
+
+
+
+
+
+
+Řekl/a jsi:
+díky moc!
+ChatGPT řekl:
+Nemáš zač! 😊 Pokud budeš potřebovat další úpravy nebo vysvětlení, klidně napiš. Ať ti programování v Pythonu jde od ruky! 🐍🚀
